@@ -1,1 +1,170 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ナレッジ管理ツール「Obsidian」で楽しむ “ゆるジャーナリング” 入門</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;700&family=Zen+Kaku+Gothic+New:wght@700;900&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --main-color: #1D1E61;
+            --sub-color-1: #5D6ADB;
+            --sub-color-2: #8A7EC9;
+            --accent-1: #A8CCED;
+            --accent-2: #E3BFCC;
+        }
+        body {
+            font-family: 'Noto Sans JP', sans-serif;
+            background-color: var(--main-color);
+            background-image: 
+                radial-gradient(ellipse 80% 80% at 50% -20%, rgba(93, 106, 219, 0.3), transparent),
+                radial-gradient(ellipse 80% 80% at 10% 110%, rgba(138, 126, 201, 0.25), transparent),
+                radial-gradient(ellipse 80% 80% at 90% 110%, rgba(227, 191, 204, 0.25), transparent);
+            background-attachment: fixed;
+        }
+        h1, h2, h3 {
+            font-family: 'Zen Kaku Gothic New', sans-serif;
+        }
+        .gradient-text {
+            background: linear-gradient(90deg, var(--accent-1), var(--accent-2));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            text-fill-color: transparent;
+        }
+        .content-card {
+            background-color: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            position: relative;
+            overflow: hidden;
+            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        }
+        .content-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: radial-gradient(800px circle at var(--mouse-x) var(--mouse-y), rgba(255, 255, 255, 0.06), transparent 40%);
+            opacity: 0;
+            transition: opacity 0.5s;
+        }
+        .content-card:hover::before {
+            opacity: 1;
+        }
+        .content-card:hover {
+            transform: translateY(-5px);
+            border-color: rgba(255, 255, 255, 0.2);
+            box-shadow: 0 25px 50px -12px rgb(0 0 0 / 0.4);
+        }
+        .card-glow {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 2px;
+            opacity: 0;
+            transition: opacity 0.3s ease-in-out;
+        }
+        .content-card:hover .card-glow {
+            opacity: 1;
+        }
+        .glow-1 { background: linear-gradient(90deg, var(--sub-color-1), var(--accent-1)); }
+        .glow-2 { background: linear-gradient(90deg, var(--sub-color-2), var(--accent-1)); }
+        .glow-3 { background: linear-gradient(90deg, var(--accent-1), var(--accent-2)); }
+        .glow-4 { background: linear-gradient(90deg, var(--accent-2), var(--sub-color-2)); }
+    </style>
+</head>
+<body class="min-h-screen flex items-center justify-center p-4">
+    <main class="w-full max-w-5xl mx-auto py-12 px-4 sm:px-6 lg:px-8">
+        <header class="text-center mb-16">
+            <h1 class="text-3xl sm:text-4xl md:text-5xl font-black gradient-text leading-tight tracking-wider">
+                ナレッジ管理ツール「Obsidian」で楽しむ<br class="hidden sm:block"> “ゆるジャーナリング” 入門
+            </h1>
+            <p class="mt-4 text-lg text-slate-300">
+                （2025年9月15日開催） 🔸 まとめ図解リンク集
+            </p>
+            <p class="mt-2 text-xs text-slate-400">
+                ※文字起こしデータを元に作成しているため、誤字脱字や情報の誤りなども含まれている可能性があります。予めご了承ください。
+            </p>
+        </header>
+
+        <div id="card-grid" class="grid grid-cols-1 md:grid-cols-2 gap-8">
+            <!-- Card 1 -->
+            <a href="1-seminar-introduction.html" class="block rounded-2xl content-card">
+                <div class="card-glow glow-1"></div>
+                <div class="p-8 relative">
+                    <h3 class="text-2xl font-bold text-white">
+                        第1話：セミナーの全体像と参加者の声
+                    </h3>
+                    <p class="mt-4 text-slate-300">
+                        Obsidianで何ができるのか？まずは参加者のリアルな感想から、このセミナーがもたらす価値と期待できる変化を探ります。初心者の方が感じた「私にもできそう！」という手応えを追体験しましょう。
+                    </p>
+                </div>
+            </a>
+
+            <!-- Card 2 -->
+            <a href="2-core-concept.html" class="block rounded-2xl content-card">
+                <div class="card-glow glow-2"></div>
+                <div class="p-8 relative">
+                    <h3 class="text-2xl font-bold text-white">
+                        第2話：ゆるジャーナリングの基本
+                    </h3>
+                    <p class="mt-4 text-slate-300">
+                        書く瞑想とも言われる「ジャーナリング」と、知識を育てる「セッテルカステン」の考え方を解説。15年間の紙ノート経験を持つ講師が、なぜObsidianを選んだのか、その核心に迫ります。
+                    </p>
+                </div>
+            </a>
+
+            <!-- Card 3 -->
+            <a href="3-note-taking-evolution.html" class="block rounded-2xl content-card">
+                <div class="card-glow glow-3"></div>
+                <div class="p-8 relative">
+                    <h3 class="text-2xl font-bold text-white">
+                        第3話：ノート術の進化と3つの視点
+                    </h3>
+                    <p class="mt-4 text-slate-300">
+                        アナログ時代の「2冊ノート運用法」が、Obsidianでどう進化したのか。「虫の目・鳥の目・魚の目」という3つの視点を取り入れることで、日々の記録をいかにして深い洞察へと変えるかを学びます。
+                    </p>
+                </div>
+            </a>
+
+            <!-- Card 4 -->
+            <a href="4-plugins-deep-dive.html" class="block rounded-2xl content-card">
+                <div class="card-glow glow-4"></div>
+                <div class="p-8 relative">
+                    <h3 class="text-2xl font-bold text-white">
+                        第4話：プラグインで可能性を拡張する
+                    </h3>
+                    <p class="mt-4 text-slate-300">
+                        Obsidianの真価は豊富なプラグインにあります。公式が提供する安全な「コアプラグイン」と、多機能な「コミュニティプラグイン」の違いを理解し、あなただけの最適な知識管理環境を構築する方法を探求します。
+                    </p>
+                </div>
+            </a>
+        </div>
+
+        <footer class="text-center mt-16">
+            <p class="text-sm text-slate-400">&copy; 2025 MIRAICHI. All Rights Reserved.</p>
+        </footer>
+    </main>
+
+    <script>
+        document.getElementById('card-grid').addEventListener('mousemove', e => {
+            for(const card of document.getElementsByClassName('content-card')) {
+                const rect = card.getBoundingClientRect();
+                const x = e.clientX - rect.left;
+                const y = e.clientY - rect.top;
+
+                card.style.setProperty('--mouse-x', `${x}px`);
+                card.style.setProperty('--mouse-y', `${y}px`);
+            }
+        });
+    </script>
+</body>
+</html>
+
 
