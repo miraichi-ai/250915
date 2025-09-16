@@ -1,0 +1,513 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>オブシディアン×セッテルカステンによるジャーナリング手法</title>
+    
+    <!-- Mermaid.js の読み込み -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/mermaid/10.6.1/mermaid.min.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            mermaid.initialize({
+                startOnLoad: true,
+                theme: 'base',
+                securityLevel: 'loose',
+                fontFamily: '"Kaisei Decol", sans-serif',
+                themeVariables: {
+                    primaryColor: '#4CAF50',
+                    primaryTextColor: '#333',
+                    primaryBorderColor: '#E91E63',
+                    lineColor: '#009688',
+                    secondaryColor: '#FFC107',
+                    tertiaryColor: '#9575CD'
+                },
+                flowchart: {
+                    cornerRadius: 15,
+                    curve: 'cardinal',
+                    htmlLabels: true
+                }
+            });
+        });
+    </script>
+    
+    <style>
+        :root {
+            --main-color: #4CAF50;
+            --accent-1: #9575CD;
+            --accent-2: #FFC107;
+            --accent-3: #009688;
+            --accent-4: #E91E63;
+            --bg-color: #FAFAFA;
+            --text-color: #333;
+            --shadow: 0 4px 6px rgba(0,0,0,0.1);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Kaisei Decol', sans-serif;
+            line-height: 1.6;
+            color: var(--text-color);
+            background: linear-gradient(135deg, var(--bg-color) 0%, #f0f8f0 100%);
+            min-height: 100vh;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        .header {
+            text-align: center;
+            background: linear-gradient(135deg, var(--main-color), var(--accent-3));
+            color: var(--bg-color);
+            padding: 40px 20px;
+            border-radius: 20px;
+            margin-bottom: 40px;
+            box-shadow: var(--shadow);
+        }
+
+        .header h1 {
+            font-size: 2.5em;
+            margin-bottom: 10px;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+        }
+
+        .header .subtitle {
+            font-size: 1.2em;
+            opacity: 0.9;
+        }
+
+        .section {
+            background: var(--bg-color);
+            margin: 30px 0;
+            padding: 30px;
+            border-radius: 15px;
+            box-shadow: var(--shadow);
+            border-left: 5px solid var(--main-color);
+        }
+
+        .section-header {
+            display: flex;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+
+        .section-icon {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-right: 15px;
+            font-size: 1.5em;
+            font-weight: bold;
+            color: var(--bg-color);
+        }
+
+        .icon-1 { background: var(--main-color); }
+        .icon-2 { background: var(--accent-1); }
+        .icon-3 { background: var(--accent-2); }
+        .icon-4 { background: var(--accent-3); }
+        .icon-5 { background: var(--accent-4); }
+
+        .section h2 {
+            font-size: 1.8em;
+            color: var(--main-color);
+            margin-bottom: 15px;
+        }
+
+        .content-box {
+            background: linear-gradient(135deg, #f8f9fa, #ffffff);
+            padding: 20px;
+            border-radius: 10px;
+            margin: 15px 0;
+            border: 2px solid transparent;
+            transition: all 0.3s ease;
+        }
+
+        .content-box:hover {
+            border-color: var(--accent-2);
+            transform: translateY(-2px);
+        }
+
+        .conclusion {
+            background: linear-gradient(135deg, var(--main-color), var(--accent-3));
+            color: var(--bg-color);
+            padding: 15px;
+            border-radius: 10px;
+            margin: 10px 0;
+            font-weight: bold;
+        }
+
+        .background {
+            background: linear-gradient(135deg, var(--accent-1), var(--accent-2));
+            color: var(--bg-color);
+            padding: 15px;
+            border-radius: 10px;
+            margin: 10px 0;
+        }
+
+        .example {
+            background: linear-gradient(135deg, var(--accent-3), var(--main-color));
+            color: var(--bg-color);
+            padding: 15px;
+            border-radius: 10px;
+            margin: 10px 0;
+        }
+
+        .metaphor {
+            background: linear-gradient(135deg, var(--accent-4), var(--accent-1));
+            color: var(--bg-color);
+            padding: 15px;
+            border-radius: 10px;
+            margin: 10px 0;
+        }
+
+        .highlight-box {
+            background: linear-gradient(135deg, var(--accent-2), #ffeb3b);
+            padding: 20px;
+            border-radius: 15px;
+            margin: 20px 0;
+            border: 3px solid var(--accent-4);
+        }
+
+        .profile-card {
+            display: flex;
+            align-items: center;
+            background: linear-gradient(135deg, var(--bg-color), #e8f5e8);
+            padding: 20px;
+            border-radius: 15px;
+            margin: 20px 0;
+            border: 2px solid var(--main-color);
+        }
+
+        .profile-avatar {
+            width: 80px;
+            height: 80px;
+            border-radius: 50%;
+            background: var(--main-color);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 2em;
+            color: var(--bg-color);
+            margin-right: 20px;
+        }
+
+        .career-timeline {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin: 20px 0;
+            flex-wrap: wrap;
+        }
+
+        .career-step {
+            background: var(--bg-color);
+            padding: 15px;
+            border-radius: 10px;
+            border: 2px solid var(--main-color);
+            margin: 5px;
+            min-width: 150px;
+            text-align: center;
+            position: relative;
+        }
+
+        .career-step::after {
+            content: '→';
+            position: absolute;
+            right: -15px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: var(--accent-4);
+            font-weight: bold;
+            font-size: 1.2em;
+        }
+
+        .career-step:last-child::after {
+            display: none;
+        }
+
+        .features-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+            margin: 20px 0;
+        }
+
+        .feature-card {
+            background: var(--bg-color);
+            padding: 20px;
+            border-radius: 10px;
+            border: 2px solid var(--accent-3);
+            text-align: center;
+            transition: all 0.3s ease;
+        }
+
+        .feature-card:hover {
+            transform: scale(1.05);
+            box-shadow: 0 8px 16px rgba(0,0,0,0.2);
+        }
+
+        .mermaid {
+            background: var(--bg-color);
+            border-radius: 10px;
+            padding: 20px;
+            margin: 20px 0;
+        }
+
+        @media (max-width: 768px) {
+            .career-timeline {
+                flex-direction: column;
+            }
+            
+            .career-step::after {
+                content: '↓';
+                right: 50%;
+                bottom: -15px;
+                top: auto;
+                transform: translateX(50%);
+            }
+            
+            .features-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header class="header">
+            <h1>📝 オブシディアン×セッテルカステン</h1>
+            <p class="subtitle">デジタル時代のジャーナリング革命</p>
+        </header>
+
+        <section class="section">
+            <div class="section-header">
+                <div class="section-icon icon-1">👤</div>
+                <h2>講師紹介：幸川理子さんのキャリアストーリー</h2>
+            </div>
+            
+            <div class="profile-card">
+                <div class="profile-avatar">👩‍💼</div>
+                <div>
+                    <h3>生成AI講師・元アナウンサー</h3>
+                    <p>15年間の紙ノート愛好家からデジタルツールへの転換体験を共有</p>
+                </div>
+            </div>
+
+            <div class="content-box">
+                <div class="conclusion">
+                    📊 <strong>結論</strong>：技術の進歩と個人の価値観の一致が、キャリア転換の成功要因
+                </div>
+                
+                <div class="background">
+                    🏛️ <strong>背景</strong>：地方テレビ局でのアナウンサー経験から「未来に希望を持てるニュース」を伝えたいという想いが芽生え、技術分野への関心が高まった
+                </div>
+                
+                <div class="example">
+                    💼 <strong>具体例</strong>：アナウンサー → テストエンジニア → 生成AI講師という一見異色のキャリアパス
+                </div>
+                
+                <div class="metaphor">
+                    🌱 <strong>例え話</strong>：ジャーナリングは自分の心の声を聞く「コンパス」のような役割を果たし、方向性を見つける手助けをする
+                </div>
+            </div>
+
+            <div class="career-timeline">
+                <div class="career-step">
+                    📺<br>アナウンサー<br><small>地方テレビ局</small>
+                </div>
+                <div class="career-step">
+                    🔧<br>テストエンジニア<br><small>技術現場体験</small>
+                </div>
+                <div class="career-step">
+                    🤖<br>生成AI講師<br><small>現在の活動</small>
+                </div>
+            </div>
+        </section>
+
+        <section class="section">
+            <div class="section-header">
+                <div class="section-icon icon-2">⚙️</div>
+                <h2>オブシディアンとセッテルカステンの魅力</h2>
+            </div>
+
+            <div class="content-box">
+                <div class="conclusion">
+                    🎯 <strong>結論</strong>：オブシディアンは無料で使える高機能な知識管理ツールで、セッテルカステン手法と組み合わせることで効果的な思考整理が可能
+                </div>
+                
+                <div class="background">
+                    📚 <strong>背景</strong>：ドイツの社会学者ニクラス・ルーマンが考案したセッテルカステン（紙切れの箱）手法は、生涯400本以上の論文と70冊の書籍執筆を支えた実績ある方法論
+                </div>
+                
+                <div class="example">
+                    🔗 <strong>具体例</strong>：一つのノートに一つのアイデアを書き、リンクとハッシュタグで関連付けて知識ネットワークを構築
+                </div>
+                
+                <div class="metaphor">
+                    📦 <strong>例え話</strong>：システム手帳のリフィルのように、必要な機能をプラグインで自由に追加・削除できる柔軟性
+                </div>
+            </div>
+
+            <div class="features-grid">
+                <div class="feature-card">
+                    <h3>💰 無料で高機能</h3>
+                    <p>基本機能は完全無料<br>マークダウン形式で保存</p>
+                </div>
+                <div class="feature-card">
+                    <h3>🔌 豊富なプラグイン</h3>
+                    <p>カレンダー、ToDo管理<br>自由度の高いカスタマイズ</p>
+                </div>
+                <div class="feature-card">
+                    <h3>🕸️ つながりの可視化</h3>
+                    <p>ノート間のリンク<br>知識のネットワーク構築</p>
+                </div>
+            </div>
+        </section>
+
+        <section class="section">
+            <div class="section-header">
+                <div class="section-icon icon-3">📖</div>
+                <h2>セッテルカステンのワークフロー</h2>
+            </div>
+
+            <div class="mermaid">
+                flowchart TD
+                    A[💡 フリーティングノート<br/>思いつきメモ] --> B[📚 リテラチャーノート<br/>出典付きノート]
+                    B --> C[📝 パーマネントノート<br/>一つのアイデアカード]
+                    C --> D[🔗 リンクとタグ付け<br/>関連性の構築]
+                    D --> E[📖 新たな制作物<br/>本や記事の執筆]
+                    
+                    style A fill:#FFC107,stroke:#E91E63,stroke-width:3px
+                    style B fill:#9575CD,stroke:#4CAF50,stroke-width:3px
+                    style C fill:#009688,stroke:#E91E63,stroke-width:3px
+                    style D fill:#4CAF50,stroke:#9575CD,stroke-width:3px
+                    style E fill:#E91E63,stroke:#009688,stroke-width:3px
+            </div>
+
+            <div class="highlight-box">
+                <h3>🏆 ルーマンの実績</h3>
+                <p><strong>生涯の成果：</strong>論文400本以上 + 書籍70冊 = 年間10冊以上の出版ペース</p>
+                <p><strong>成功の秘訣：</strong>思いつきから段階的に知識を育てるシステマティックなアプローチ</p>
+            </div>
+        </section>
+
+        <section class="section">
+            <div class="section-header">
+                <div class="section-icon icon-4">✍️</div>
+                <h2>ジャーナリングとは何か？その効果</h2>
+            </div>
+
+            <div class="content-box">
+                <div class="conclusion">
+                    🧘 <strong>結論</strong>：ジャーナリングは「書く瞑想」で、感情・思考の整理と自己理解を深める実践的なノート術
+                </div>
+                
+                <div class="background">
+                    🤖 <strong>背景</strong>：AI時代だからこそ、自分の言葉で考え、感情を言語化する能力がより重要になっている
+                </div>
+                
+                <div class="example">
+                    🏖️ <strong>具体例</strong>：「バーベキューに行った」→「暑かった、紫外線対策が不十分だった、次回はUVカットの服を着よう」という感情・思考の深掘り
+                </div>
+                
+                <div class="metaphor">
+                    🧭 <strong>例え話</strong>：ジャーナリングは心の中のナビゲーションシステム。目的地（自分の価値観）を明確にし、最適なルートを見つける
+                </div>
+            </div>
+
+            <div class="mermaid">
+                graph LR
+                    A[📅 日記] --> B[出来事の記録]
+                    A --> C[後で見返す]
+                    A --> D[思い出作り]
+                    
+                    E[✍️ ジャーナリング] --> F[感情の言語化]
+                    E --> G[思考の整理]
+                    E --> H[自己理解]
+                    
+                    style A fill:#FFC107,stroke:#333,stroke-width:2px
+                    style E fill:#4CAF50,stroke:#333,stroke-width:2px
+                    style F fill:#E91E63,stroke:#333,stroke-width:2px
+                    style G fill:#9575CD,stroke:#333,stroke-width:2px
+                    style H fill:#009688,stroke:#333,stroke-width:2px
+            </div>
+
+            <div class="highlight-box">
+                <h3>💭 古川武士さんの名言</h3>
+                <p><strong>「ジャーナリングとは書く瞑想」</strong></p>
+                <p>その場に集中し、今感じていること・考えていることに意識を向ける実践</p>
+            </div>
+        </section>
+
+        <section class="section">
+            <div class="section-header">
+                <div class="section-icon icon-5">🚀</div>
+                <h2>実践：2ノート運用プラス手法</h2>
+            </div>
+
+            <div class="content-box">
+                <div class="conclusion">
+                    🎯 <strong>結論</strong>：アナログ時代の2ノート運用にオブシディアンの機能を加えることで、より効率的で継続可能なジャーナリングシステムが構築できる
+                </div>
+                
+                <div class="background">
+                    📚 <strong>背景</strong>：15年間の紙ノート経験で培った「捨てる用」と「残す用」の使い分けノウハウ
+                </div>
+                
+                <div class="example">
+                    💼 <strong>具体例</strong>：思考整理、アナウンス練習記録、仕事改善メモ、ToDoリストなど多様な用途での実践経験
+                </div>
+                
+                <div class="metaphor">
+                    🏠 <strong>例え話</strong>：クローゼットの整理術と同じ。日常使いと保存用を分けることで、必要な情報をすぐに見つけられる
+                </div>
+            </div>
+
+            <div class="mermaid">
+                flowchart TB
+                    A[📱 デジタルジャーナリング] --> B[💭 思考の言語化]
+                    B --> C[🔄 継続的な実践]
+                    C --> D[🎯 自己理解の深化]
+                    D --> E[💪 意思決定力の向上]
+                    E --> F[🌟 人生の納得感]
+                    
+                    G[🤖 AI時代の課題] --> H[自分の言葉の重要性]
+                    H --> I[主体的思考の育成]
+                    I --> A
+                    
+                    style A fill:#4CAF50,stroke:#E91E63,stroke-width:3px
+                    style F fill:#FFC107,stroke:#009688,stroke-width:3px
+                    style G fill:#9575CD,stroke:#4CAF50,stroke-width:3px
+            </div>
+
+            <div class="highlight-box">
+                <h3>🌈 現代社会での価値</h3>
+                <p><strong>多様な幸せの形：</strong>自分なりの幸せを定義する時代だからこそ、内省と自己理解がより重要</p>
+                <p><strong>キャリア形成：</strong>外的な期待ではなく、内的な価値観に基づいた選択の実現</p>
+            </div>
+        </section>
+
+        <footer class="section" style="text-align: center; background: linear-gradient(135deg, var(--main-color), var(--accent-3)); color: var(--bg-color);">
+            <h2>🎉 まとめ</h2>
+            <p style="font-size: 1.2em; margin: 20px 0;">
+                オブシディアン × セッテルカステン × ジャーナリングの組み合わせで、<br>
+                <strong>思考を育て、自分らしい人生を歩むためのデジタルツール活用法</strong>
+            </p>
+            <div style="background: rgba(255,255,255,0.2); padding: 20px; border-radius: 10px; margin: 20px 0;">
+                <p>📝 書くことで思考を整理 → 🔗 つながりで知識を育成 → 🎯 納得感のある人生選択</p>
+            </div>
+        </footer>
+    </div>
+</body>
+</html>

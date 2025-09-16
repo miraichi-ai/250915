@@ -1,0 +1,725 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Obsidianプラグイン完全ガイド</title>
+    
+    <!-- Mermaid.js の読み込み -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/mermaid/10.6.1/mermaid.min.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            mermaid.initialize({
+                startOnLoad: true,
+                theme: 'base',
+                securityLevel: 'loose',
+                fontFamily: '"Hiragino Sans", "Yu Gothic", sans-serif',
+                themeVariables: {
+                    primaryColor: '#4CAF50',
+                    primaryTextColor: '#333',
+                    primaryBorderColor: '#E91E63',
+                    lineColor: '#009688',
+                    secondaryColor: '#FFC107',
+                    tertiaryColor: '#9575CD'
+                },
+                flowchart: {
+                    cornerRadius: 15,
+                    curve: 'cardinal',
+                    htmlLabels: true
+                }
+            });
+        });
+    </script>
+    
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Hiragino Sans', 'Yu Gothic', sans-serif;
+            line-height: 1.6;
+            color: #333;
+            background: linear-gradient(135deg, #FAFAFA 0%, #F0F0F0 100%);
+            min-height: 100vh;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        
+        .header {
+            text-align: center;
+            margin-bottom: 40px;
+            padding: 30px;
+            background: linear-gradient(135deg, #4CAF50, #009688);
+            border-radius: 20px;
+            color: white;
+            box-shadow: 0 10px 30px rgba(76, 175, 80, 0.3);
+        }
+        
+        .header h1 {
+            font-size: 2.5em;
+            margin-bottom: 10px;
+        }
+        
+        .header p {
+            font-size: 1.2em;
+            opacity: 0.9;
+        }
+        
+        .section {
+            background: white;
+            border-radius: 15px;
+            padding: 30px;
+            margin-bottom: 30px;
+            box-shadow: 0 5px 20px rgba(0, 0, 0, 0.1);
+            border-left: 5px solid;
+        }
+        
+        .section.comparison { border-left-color: #4CAF50; }
+        .section.core { border-left-color: #9575CD; }
+        .section.community { border-left-color: #FFC107; }
+        .section.security { border-left-color: #E91E63; }
+        .section.guide { border-left-color: #009688; }
+        
+        .section-title {
+            font-size: 1.8em;
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+        
+        .icon {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5em;
+            color: white;
+        }
+        
+        .icon.comparison { background: #4CAF50; }
+        .icon.core { background: #9575CD; }
+        .icon.community { background: #FFC107; }
+        .icon.security { background: #E91E63; }
+        .icon.guide { background: #009688; }
+        
+        .comparison-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+            margin: 20px 0;
+        }
+        
+        .plugin-card {
+            background: #F8F9FA;
+            border-radius: 15px;
+            padding: 25px;
+            border: 3px solid;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .plugin-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.15);
+        }
+        
+        .plugin-card.core-plugin {
+            border-color: #9575CD;
+            background: linear-gradient(135deg, #F3E5F5, #EDE7F6);
+        }
+        
+        .plugin-card.community-plugin {
+            border-color: #FFC107;
+            background: linear-gradient(135deg, #FFFDE7, #FFF8E1);
+        }
+        
+        .plugin-header {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            margin-bottom: 20px;
+        }
+        
+        .plugin-icon {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.8em;
+            color: white;
+        }
+        
+        .core-icon { background: #9575CD; }
+        .community-icon { background: #FFC107; color: #333; }
+        
+        .plugin-title {
+            font-size: 1.4em;
+            font-weight: bold;
+            color: #333;
+        }
+        
+        .feature-list {
+            list-style: none;
+            padding: 0;
+        }
+        
+        .feature-list li {
+            padding: 8px 0;
+            border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .feature-list li:last-child {
+            border-bottom: none;
+        }
+        
+        .feature-name {
+            font-weight: bold;
+            color: #333;
+        }
+        
+        .feature-value {
+            color: #666;
+        }
+        
+        .plugin-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 20px;
+            margin: 20px 0;
+        }
+        
+        .individual-plugin {
+            background: white;
+            border-radius: 10px;
+            padding: 20px;
+            border: 2px solid transparent;
+            transition: all 0.3s ease;
+            box-shadow: 0 3px 10px rgba(0, 0, 0, 0.1);
+        }
+        
+        .individual-plugin:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
+        }
+        
+        .individual-plugin.essential { border-color: #4CAF50; }
+        .individual-plugin.advanced { border-color: #9575CD; }
+        .individual-plugin.popular { border-color: #FFC107; }
+        
+        .plugin-name {
+            font-size: 1.2em;
+            font-weight: bold;
+            margin-bottom: 10px;
+            color: #333;
+        }
+        
+        .plugin-function {
+            color: #666;
+            font-size: 0.9em;
+            margin-bottom: 10px;
+        }
+        
+        .plugin-usage {
+            color: #888;
+            font-size: 0.85em;
+            margin-bottom: 10px;
+        }
+        
+        .popularity {
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+        
+        .stars {
+            color: #FFC107;
+            font-size: 1.1em;
+        }
+        
+        .step-flow {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+            margin: 20px 0;
+        }
+        
+        .step-card {
+            background: white;
+            border-radius: 10px;
+            padding: 20px;
+            text-align: center;
+            border: 2px solid;
+            position: relative;
+        }
+        
+        .step-card.beginner { border-color: #4CAF50; }
+        .step-card.intermediate { border-color: #FFC107; }
+        .step-card.advanced { border-color: #E91E63; }
+        
+        .step-number {
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 10px;
+            color: white;
+            font-weight: bold;
+        }
+        
+        .step-number.beginner { background: #4CAF50; }
+        .step-number.intermediate { background: #FFC107; color: #333; }
+        .step-number.advanced { background: #E91E63; }
+        
+        .risk-comparison {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+            margin: 20px 0;
+        }
+        
+        .risk-card {
+            background: white;
+            border-radius: 10px;
+            padding: 20px;
+            border-left: 5px solid;
+        }
+        
+        .risk-card.safe { border-left-color: #4CAF50; }
+        .risk-card.caution { border-left-color: #FFC107; }
+        
+        .risk-level {
+            font-size: 1.3em;
+            font-weight: bold;
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .conclusion-box {
+            background: linear-gradient(135deg, #4CAF50, #009688);
+            color: white;
+            border-radius: 15px;
+            padding: 25px;
+            margin: 30px 0;
+            text-align: center;
+        }
+        
+        .conclusion-box h3 {
+            font-size: 1.5em;
+            margin-bottom: 15px;
+        }
+        
+        .mermaid-container {
+            background: white;
+            border-radius: 10px;
+            padding: 20px;
+            margin: 20px 0;
+            box-shadow: 0 3px 15px rgba(0, 0, 0, 0.1);
+        }
+        
+        @media (max-width: 768px) {
+            .comparison-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .risk-comparison {
+                grid-template-columns: 1fr;
+            }
+            
+            .header h1 {
+                font-size: 2em;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>🔌 Obsidianプラグイン完全ガイド</h1>
+            <p>コアプラグイン vs コミュニティプラグイン：賢い選択のための比較分析</p>
+        </div>
+
+        <!-- 基本比較 -->
+        <div class="section comparison">
+            <div class="section-title">
+                <div class="icon comparison">⚖️</div>
+                <h2>コアプラグイン vs コミュニティプラグイン比較</h2>
+            </div>
+            
+            <div class="comparison-grid">
+                <div class="plugin-card core-plugin">
+                    <div class="plugin-header">
+                        <div class="plugin-icon core-icon">🏢</div>
+                        <div class="plugin-title">コアプラグイン</div>
+                    </div>
+                    
+                    <ul class="feature-list">
+                        <li>
+                            <span class="feature-name">開発者</span>
+                            <span class="feature-value">Obsidian公式チーム</span>
+                        </li>
+                        <li>
+                            <span class="feature-name">提供数</span>
+                            <span class="feature-value">26個（うち2個有料）</span>
+                        </li>
+                        <li>
+                            <span class="feature-name">インストール</span>
+                            <span class="feature-value">最初から搭載済み</span>
+                        </li>
+                        <li>
+                            <span class="feature-name">有効化</span>
+                            <span class="feature-value">スイッチONのみ</span>
+                        </li>
+                        <li>
+                            <span class="feature-name">安全性</span>
+                            <span class="feature-value">🟢 高い安全性</span>
+                        </li>
+                        <li>
+                            <span class="feature-name">メンテナンス</span>
+                            <span class="feature-value">🟢 公式サポート</span>
+                        </li>
+                        <li>
+                            <span class="feature-name">アップデート</span>
+                            <span class="feature-value">🟢 自動更新</span>
+                        </li>
+                    </ul>
+                </div>
+                
+                <div class="plugin-card community-plugin">
+                    <div class="plugin-header">
+                        <div class="plugin-icon community-icon">👥</div>
+                        <div class="plugin-title">コミュニティプラグイン</div>
+                    </div>
+                    
+                    <ul class="feature-list">
+                        <li>
+                            <span class="feature-name">開発者</span>
+                            <span class="feature-value">外部開発者・有志</span>
+                        </li>
+                        <li>
+                            <span class="feature-name">提供数</span>
+                            <span class="feature-value">1,500以上（2025年7月）</span>
+                        </li>
+                        <li>
+                            <span class="feature-name">インストール</span>
+                            <span class="feature-value">追加DL・インストール要</span>
+                        </li>
+                        <li>
+                            <span class="feature-name">有効化</span>
+                            <span class="feature-value">セーフモード解除→検索→DL</span>
+                        </li>
+                        <li>
+                            <span class="feature-name">安全性</span>
+                            <span class="feature-value">🟡 リスクあり</span>
+                        </li>
+                        <li>
+                            <span class="feature-name">メンテナンス</span>
+                            <span class="feature-value">🟡 開発者次第</span>
+                        </li>
+                        <li>
+                            <span class="feature-name">アップデート</span>
+                            <span class="feature-value">🟡 手動更新</span>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <!-- 主要コアプラグイン -->
+        <div class="section core">
+            <div class="section-title">
+                <div class="icon core">🛠️</div>
+                <h2>主要なコアプラグイン一覧</h2>
+            </div>
+            
+            <div class="plugin-grid">
+                <div class="individual-plugin essential">
+                    <div class="plugin-name">📅 デイリーノート</div>
+                    <div class="plugin-function">日付ごとのノート自動作成</div>
+                    <div class="plugin-usage">用途：日記・ジャーナリング</div>
+                </div>
+                
+                <div class="individual-plugin essential">
+                    <div class="plugin-name">📋 テンプレート</div>
+                    <div class="plugin-function">ノートのひな形機能</div>
+                    <div class="plugin-usage">用途：定型文書作成</div>
+                </div>
+                
+                <div class="individual-plugin essential">
+                    <div class="plugin-name">🌐 グラフビュー</div>
+                    <div class="plugin-function">ノート間の関係性を視覚化</div>
+                    <div class="plugin-usage">用途：知識の構造把握</div>
+                </div>
+                
+                <div class="individual-plugin advanced">
+                    <div class="plugin-name">📝 アウトライン</div>
+                    <div class="plugin-function">見出し構造の表示</div>
+                    <div class="plugin-usage">用途：文書構造の把握</div>
+                </div>
+                
+                <div class="individual-plugin essential">
+                    <div class="plugin-name">🔗 バックリンク</div>
+                    <div class="plugin-function">他ノートからのリンク表示</div>
+                    <div class="plugin-usage">用途：関連情報の発見</div>
+                </div>
+                
+                <div class="individual-plugin essential">
+                    <div class="plugin-name">⚡ クイックスイッチャー</div>
+                    <div class="plugin-function">ノート間の高速移動</div>
+                    <div class="plugin-usage">用途：効率的なナビゲーション</div>
+                </div>
+                
+                <div class="individual-plugin essential">
+                    <div class="plugin-name">🔍 検索</div>
+                    <div class="plugin-function">全文検索機能</div>
+                    <div class="plugin-usage">用途：情報の検索</div>
+                </div>
+                
+                <div class="individual-plugin advanced">
+                    <div class="plugin-name">🗄️ Bases</div>
+                    <div class="plugin-function">データベース機能（2025年8月追加）</div>
+                    <div class="plugin-usage">用途：構造化データ管理</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- 人気コミュニティプラグイン -->
+        <div class="section community">
+            <div class="section-title">
+                <div class="icon community">🌟</div>
+                <h2>人気コミュニティプラグイン一覧</h2>
+            </div>
+            
+            <div class="plugin-grid">
+                <div class="individual-plugin popular">
+                    <div class="plugin-name">📊 Dataview</div>
+                    <div class="plugin-function">ノートをデータベース化</div>
+                    <div class="plugin-usage">カテゴリ：データ管理</div>
+                    <div class="popularity">
+                        <span class="stars">★★★★★</span>
+                        <span>最高人気</span>
+                    </div>
+                </div>
+                
+                <div class="individual-plugin popular">
+                    <div class="plugin-name">🎨 Templater</div>
+                    <div class="plugin-function">高度なテンプレート作成</div>
+                    <div class="plugin-usage">カテゴリ：テンプレート</div>
+                    <div class="popularity">
+                        <span class="stars">★★★★★</span>
+                        <span>最高人気</span>
+                    </div>
+                </div>
+                
+                <div class="individual-plugin popular">
+                    <div class="plugin-name">📅 Calendar</div>
+                    <div class="plugin-function">カレンダー表示でデイリーノート管理</div>
+                    <div class="plugin-usage">カテゴリ：カレンダー</div>
+                    <div class="popularity">
+                        <span class="stars">★★★★★</span>
+                        <span>最高人気</span>
+                    </div>
+                </div>
+                
+                <div class="individual-plugin advanced">
+                    <div class="plugin-name">✅ Tasks</div>
+                    <div class="plugin-function">高度なタスク管理機能</div>
+                    <div class="plugin-usage">カテゴリ：タスク管理</div>
+                    <div class="popularity">
+                        <span class="stars">★★★★☆</span>
+                        <span>高人気</span>
+                    </div>
+                </div>
+                
+                <div class="individual-plugin advanced">
+                    <div class="plugin-name">🎨 Excalidraw</div>
+                    <div class="plugin-function">手書き風図表の作成</div>
+                    <div class="plugin-usage">カテゴリ：図表作成</div>
+                    <div class="popularity">
+                        <span class="stars">★★★★☆</span>
+                        <span>高人気</span>
+                    </div>
+                </div>
+                
+                <div class="individual-plugin advanced">
+                    <div class="plugin-name">📋 Kanban</div>
+                    <div class="plugin-function">Trello風のタスク管理</div>
+                    <div class="plugin-usage">カテゴリ：カンバン</div>
+                    <div class="popularity">
+                        <span class="stars">★★★☆☆</span>
+                        <span>中人気</span>
+                    </div>
+                </div>
+                
+                <div class="individual-plugin advanced">
+                    <div class="plugin-name">🤖 Smart Connections</div>
+                    <div class="plugin-function">AIによる関連ノート提案</div>
+                    <div class="plugin-usage">カテゴリ：AI機能</div>
+                    <div class="popularity">
+                        <span class="stars">★★★☆☆</span>
+                        <span>中人気</span>
+                    </div>
+                </div>
+                
+                <div class="individual-plugin advanced">
+                    <div class="plugin-name">💾 Git</div>
+                    <div class="plugin-function">Gitによる自動バックアップ</div>
+                    <div class="plugin-usage">カテゴリ：バックアップ</div>
+                    <div class="popularity">
+                        <span class="stars">★★★☆☆</span>
+                        <span>中人気</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- セキュリティ・リスク比較 -->
+        <div class="section security">
+            <div class="section-title">
+                <div class="icon security">🔒</div>
+                <h2>セキュリティ・リスク比較</h2>
+            </div>
+            
+            <div class="risk-comparison">
+                <div class="risk-card safe">
+                    <div class="risk-level">
+                        🟢 コアプラグイン（安全）
+                    </div>
+                    <ul>
+                        <li><strong>セキュリティリスク：</strong> 最小限</li>
+                        <li><strong>品質保証：</strong> 公式による厳格な品質管理</li>
+                        <li><strong>長期サポート：</strong> 保証あり</li>
+                        <li><strong>互換性：</strong> Obsidianアップデートに確実対応</li>
+                    </ul>
+                </div>
+                
+                <div class="risk-card caution">
+                    <div class="risk-level">
+                        🟡 コミュニティプラグイン（要注意）
+                    </div>
+                    <ul>
+                        <li><strong>セキュリティリスク：</strong> ファイルアクセス・ネット接続の可能性</li>
+                        <li><strong>品質保証：</strong> 開発者のスキル・意欲に依存</li>
+                        <li><strong>長期サポート：</strong> 開発停止リスクあり</li>
+                        <li><strong>互換性：</strong> 対応遅れや非対応の可能性</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <!-- 導入推奨順序 -->
+        <div class="section guide">
+            <div class="section-title">
+                <div class="icon guide">📈</div>
+                <h2>導入推奨順序</h2>
+            </div>
+            
+            <div class="mermaid-container">
+                <div class="mermaid">
+                    graph TD
+                        A[初級者] --> B[コアプラグインのみ<br/>基本機能の理解に集中]
+                        B --> C[中級者]
+                        C --> D[定番コミュニティプラグイン<br/>Dataview, Templater, Calendar等]
+                        D --> E[上級者]
+                        E --> F[特化プラグイン<br/>個別ニーズに応じた専門プラグイン]
+                        
+                        G[安全性重視] --> H[コアプラグイン中心]
+                        I[機能性重視] --> J[コミュニティプラグイン積極活用]
+                        K[長期運用] --> L[コアプラグイン基盤]
+                        M[実験的利用] --> N[コミュニティプラグイン]
+                        
+                        style A fill:#4CAF50,stroke:#388E3C,color:#fff
+                        style C fill:#FFC107,stroke:#F57C00,color:#333
+                        style E fill:#E91E63,stroke:#C2185B,color:#fff
+                        style H fill:#9575CD,stroke:#7E57C2,color:#fff
+                        style J fill:#009688,stroke:#00796B,color:#fff
+                </div>
+            </div>
+            
+            <div class="step-flow">
+                <div class="step-card beginner">
+                    <div class="step-number beginner">1</div>
+                    <h3>初級者</h3>
+                    <p><strong>対象：</strong> コアプラグインのみ</p>
+                    <p><strong>理由：</strong> 基本機能の理解に集中</p>
+                    <p><strong>期間：</strong> 1-2ヶ月</p>
+                </div>
+                
+                <div class="step-card intermediate">
+                    <div class="step-number intermediate">2</div>
+                    <h3>中級者</h3>
+                    <p><strong>対象：</strong> 定番コミュニティプラグイン</p>
+                    <p><strong>推奨：</strong> Dataview、Templater、Calendar</p>
+                    <p><strong>期間：</strong> 3-6ヶ月</p>
+                </div>
+                
+                <div class="step-card advanced">
+                    <div class="step-number advanced">3</div>
+                    <h3>上級者</h3>
+                    <p><strong>対象：</strong> 特化プラグイン</p>
+                    <p><strong>選択：</strong> 個別ニーズに応じた専門プラグイン</p>
+                    <p><strong>期間：</strong> 継続的</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- 使い分けの指針 -->
+        <div class="section guide">
+            <div class="section-title">
+                <div class="icon guide">🎯</div>
+                <h2>使い分けの指針</h2>
+            </div>
+            
+            <div class="plugin-grid">
+                <div class="individual-plugin essential">
+                    <div class="plugin-name">📝 基本的なノート作成</div>
+                    <div class="plugin-function">推奨：コアプラグイン中心</div>
+                    <div class="plugin-usage">理由：安定性・安全性重視</div>
+                </div>
+                
+                <div class="individual-plugin popular">
+                    <div class="plugin-name">📊 高度なデータ管理</div>
+                    <div class="plugin-function">推奨：コミュニティプラグイン併用</div>
+                    <div class="plugin-usage">理由：機能の豊富さが必要</div>
+                </div>
+                
+                <div class="individual-plugin essential">
+                    <div class="plugin-name">🔒 長期運用</div>
+                    <div class="plugin-function">推奨：コアプラグイン基盤</div>
+                    <div class="plugin-usage">理由：持続可能性を重視</div>
+                </div>
+                
+                <div class="individual-plugin advanced">
+                    <div class="plugin-name">🧪 実験的利用</div>
+                    <div class="plugin-function">推奨：コミュニティプラグイン</div>
+                    <div class="plugin-usage">理由：最新機能の試用</div>
+                </div>
+            </div>
+            
+            <div class="conclusion-box">
+                <h3>🎯 賢い選択のポイント</h3>
+                <p>初心者はコアプラグインから始め、慣れてきたら段階的にコミュニティプラグインを追加。自分の用途と技術レベルに応じて適切なプラグインを選択することで、Obsidianを効果的に活用できます。安定性を重視するなら公式、機能性を重視するならコミュニティという使い分けが重要です。</p>
+            </div>
+        </div>
+    </div>
+</body>
+</html>
